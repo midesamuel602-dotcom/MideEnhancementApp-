@@ -1,0 +1,9 @@
+{
+  "name":"MideEnhancementApp",
+  "short_name":"MEA",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#0b0d12",
+  "theme_color":"#0b0d12",
+  "description":"Free local-first media enhancement studio."
+}

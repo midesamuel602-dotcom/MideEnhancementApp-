@@ -1,0 +1,25 @@
+{
+  "format_version": 1,
+  "models": [
+    {
+      "id": "example-inpainting",
+      "task": "inpaint",
+      "runtime": "onnx-webgpu",
+      "file": "example-inpainting.onnx",
+      "sha256": "PUT_MODEL_SHA256_HERE",
+      "license": "VERIFY_MODEL_LICENSE_BEFORE_DISTRIBUTION",
+      "input": "RGB image + binary mask",
+      "output": "RGB image"
+    },
+    {
+      "id": "example-superres",
+      "task": "superres",
+      "runtime": "onnx-webgpu",
+      "file": "example-superres.onnx",
+      "sha256": "PUT_MODEL_SHA256_HERE",
+      "license": "VERIFY_MODEL_LICENSE_BEFORE_DISTRIBUTION",
+      "input": "RGB image",
+      "output": "RGB image"
+    }
+  ]
+}

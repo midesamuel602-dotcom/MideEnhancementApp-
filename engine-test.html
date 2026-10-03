@@ -1,0 +1,12 @@
+<!doctype html><meta name="viewport" content="width=device-width"><title>MEA Engine Test</title>
+<pre id="out">Testing…</pre>
+<script src="ai/engine.js"></script>
+<script>
+(async()=>{
+ const o=document.querySelector("#out");
+ const c=await MEAEngine.init();
+ o.textContent=JSON.stringify(c,null,2);
+ try{o.textContent+="\n\nWorker ping: "+JSON.stringify(await MEAEngine.run("ping",{}));}
+ catch(e){o.textContent+="\n\nWorker error: "+e}
+})();
+</script>

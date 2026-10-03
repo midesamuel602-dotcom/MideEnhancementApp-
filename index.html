@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+<title>MideEnhancementApp — MEA</title>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="logo">M</div><div><b>MideEnhancementApp</b><small>MEA • Free Media Studio</small></div></div>
+  <span id="engineBadge" class="badge">Checking engine…</span>
+</header>
+
+<main>
+<section class="hero">
+  <p class="eyebrow">FREE • LOCAL-FIRST</p>
+  <h1>Clean it. Enhance it.<br>Keep the quality.</h1>
+  <p class="sub">Remove unwanted marks, improve images and upscale media directly in your browser.</p>
+</section>
+
+<nav class="tools" aria-label="Tools">
+  <button class="tool active" data-mode="remove"><strong>✦</strong><span>Remove<br><small>Watermark</small></span></button>
+  <button class="tool" data-mode="enhance"><strong>◈</strong><span>Enhance<br><small>Image</small></span></button>
+  <button class="tool" data-mode="upscale"><strong>↗</strong><span>Super<br><small>Upscale</small></span></button>
+  <button class="tool" data-mode="video"><strong>▶</strong><span>Video<br><small>Studio</small></span></button>
+</nav>
+
+<section class="card">
+  <label class="picker">
+    <input id="fileInput" type="file" accept="image/*,video/*">
+    <span class="pickIcon">＋</span>
+    <b>Choose a photo or video</b>
+    <small>Nothing is uploaded by MEA in local mode</small>
+  </label>
+
+  <div id="workspace" class="workspace hidden">
+    <div class="mediaHead">
+      <div><b id="fileName">No file</b><small id="fileMeta"></small></div>
+      <button id="clearBtn" class="ghost">Clear</button>
+    </div>
+
+    <div class="compare" id="compare">
+      <div class="preview original"><img id="originalImg" alt=""></div>
+      <div class="preview result"><img id="resultImg" alt=""></div>
+      <div id="splitLine" class="splitLine"></div>
+      <span class="tag before">ORIGINAL</span><span class="tag after">RESULT</span>
+      <canvas id="maskCanvas"></canvas>
+      <div id="brush" class="brush"></div>
+    </div>
+
+    <div id="drawHelp" class="hint">Paint over the unwanted area. Pinch/zoom is not required.</div>
+
+    <div class="panel removePanel">
+      <div class="row"><b>Watermark area</b><button id="eraseMask" class="mini">Erase mask</button></div>
+      <div class="sliderRow"><label>Brush</label><input id="brushSize" type="range" min="8" max="160" value="48"><span id="brushVal">48px</span></div>
+      <button id="processBtn" class="primary">Process removal</button>
+    </div>
+
+    <div id="enhancePanel" class="panel hidden">
+      <div class="row"><b>Enhancement strength</b><span id="enhanceVal">55%</span></div>
+      <input id="enhanceStrength" type="range" min="0" max="100" value="55">
+      <button id="enhanceBtn" class="primary">Enhance image</button>
+    </div>
+
+    <div id="upscalePanel" class="panel hidden">
+      <div class="row"><b>Upscale</b><span>High-quality browser fallback</span></div>
+      <div class="scaleBtns"><button data-scale="1.5">1.5×</button><button class="selected" data-scale="2">2×</button><button data-scale="3">3×</button></div>
+      <button id="upscaleBtn" class="primary">Upscale image</button>
+    </div>
+
+    <div id="videoPanel" class="panel hidden">
+      <div class="row"><b>Video Studio</b><span id="videoStatus">Ready</span></div>
+      <p class="muted">Select a fixed unwanted area on the video, then process it locally. The current remover is a fallback; the neural tracker/inpainting adapter is prepared for integration.</p>
+      <video id="videoPreview" class="videoPreview" controls playsinline></video>
+      <div id="videoMaskBox" class="videoMaskBox">
+        <canvas id="videoMaskCanvas"></canvas>
+        <div id="videoMaskRect"></div>
+      </div>
+      <div class="videoControls">
+        <label>Tool
+          <select id="videoTrackingMode" aria-label="Video watermark tracking mode">
+<option value="fixed">Fixed area</option>
+<option value="track">Track area</option>
+</select>
+<select id="videoTool"><option value="remove">Remove marked area</option><option value="enhance">Enhance video</option></select>
+        </label>
+        <label>Enhance <input id="videoEnhance" type="range" min="0" max="100" value="20"><span id="videoEnhanceVal">20%</span></label>
+        <label>Output <select id="videoFormat"><option value="video/webm">WebM</option></select></label>
+      </div>
+      <p class="hint">Drag on the video preview to mark a fixed watermark area. Tracking across moving watermarks is reserved for the neural video adapter.</p>
+      <button id="videoStart" class="primary">Process video</button>
+      <button id="videoStop" class="ghost hidden">Stop</button>
+      <a id="videoSave" class="save hidden" download="MEA-video.webm">Save processed video</a>
+    </div>
+
+    <div class="progressWrap hidden" id="progressWrap">
+      <div class="progressTop"><span id="progressText">Processing…</span><span id="progressPct">0%</span></div>
+      <div class="progress"><i id="progressBar"></i></div>
+    </div>
+
+    <div class="compareControl hidden" id="compareControl">
+      <label>Before / after</label><input id="compareSlider" type="range" min="0" max="100" value="50">
+    </div>
+
+    <div class="export hidden" id="exportBox">
+      <div><b>Result ready</b><small id="resultMeta">Choose a format and save.</small></div>
+      <select id="formatSelect"><option value="image/png">PNG • lossless</option><option value="image/webp">WebP • smaller</option><option value="image/jpeg">JPEG • photo</option></select>
+      <input id="quality" type="range" min="70" max="100" value="95" title="Quality">
+      <a id="saveBtn" class="save" download="mea-result.png">Save result</a>
+    </div>
+  </div>
+</section>
+
+<section class="status card">
+  <div class="statusIcon">✓</div><div class="statusDot" id="localStatusDot"></div>
+  <div><b id="privacyTitle">Local processing</b><p id="privacyText">Your selected image stays in this browser unless you connect your own inference service.</p></div>
+</section>
+</main>
+<footer>MEA • Free • Local-first • No subscriptions or credits</footer>
+<section class="advanced card">
+  <div class="advancedHead"><div><b>AI engine</b><small id="engineDetail">Local browser engine</small></div><label class="modelPick">Load local model<input id="modelInput" type="file" accept=".onnx,.ort,.bin"></label></div>
+  <p class="muted">MEA never silently sends your media to a server. A compatible local model can be connected when a supported neural runtime is available.</p>
+<div class="engineFacts"><span id="gpuFact">WebGPU: checking</span><span id="workerFact">Worker: checking</span><span id="modelFact">Model: none</span></div>
+</section>
+<script src="ai/runtime-config.js"></script><script src="ai/quality-engine.js"></script><script src="ai/image-engine.js"></script><script src="ai/engine.js"></script><script src="ai/mask-tools.js"></script><script src="ai/neural-adapter.js"></script><script src="ai/tracking.js"></script><script src="ai/video-engine.js"></script>
+<script src="app.js"></script><script>if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});</script>
+</body>
+</html>
